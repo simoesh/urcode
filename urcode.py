@@ -5,7 +5,7 @@ from sys import argv
 vchars_start = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 vchars = '_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
-definitions = ['DEF_STR_CONSTANTS', 'DEF_WARNING', 'DEF_TRUNC', 'DEF_RANDOM', 'DEF_LENGTH', 'DEF_INDEXOF', 'DEF_PUSH', 'DEF_POP', 'DEF_QUEUE', 'DEF_UNQUEUE', 'DEF_POKE', 'DEF_PICK', 'DEF_DELETE', 'DEF_STR', 'DEF_PARSE_INT', 'DEF_BYTE_TO_HEXSTR', 'DEF_MATH_PI', 'DEF_MATH_SQRT', 'DEF_MATH_COS', 'DEF_MATH_SIN', 'DEF_MATH_ATAN2', 'DEF_MATH_LOG10', 'DEF_NOT', 'DEF_ISNULL', 'DEF_STRIP', 'DEF_SPLIT', 'DEF_SUBSTRING', 'DEF_CHAR_CODE_AT', 'DEF_STARTSWITH', 'DEF_ENDSWITH', 'DEF_LOWERCASE', 'DEF_UPPERCASE', 'DEF_CONCAT', 'DEF_SIGNED_32BITS', 'DEF_UNSIGNED_32BITS', 'DEF_GET_TYPE', 'DEF_IS_TYPE_NUM', 'DEF_IS_TYPE_BOOL', 'DEF_IS_TYPE_STR', 'DEF_IS_TYPE_LIST', 'DEF_IS_TYPE_DICT', 'DEF_IS_TYPE_NULL', 'DEF_CHR_QUOTE', 'DEF_CHR_SQUOTE', 'DEF_CHR_LF', 'DEF_CHR_CR', 'DEF_CHR_TAB']
+definitions = ['DEF_STR_CONSTANTS', 'DEF_WARNING', 'DEF_TRUNC', 'DEF_RANDOM', 'DEF_LENGTH', 'DEF_INDEXOF', 'DEF_PUSH', 'DEF_POP', 'DEF_QUEUE', 'DEF_UNQUEUE', 'DEF_POKE', 'DEF_PICK', 'DEF_DELETE', 'DEF_STR', 'DEF_PARSE_INT', 'DEF_BYTE_TO_HEXSTR', 'DEF_MATH_PI', 'DEF_MATH_SQRT', 'DEF_MATH_COS', 'DEF_MATH_SIN', 'DEF_MATH_ATAN2', 'DEF_MATH_LOG10', 'DEF_NOT', 'DEF_ISNULL', 'DEF_STRIP', 'DEF_SPLIT', 'DEF_SUBSTRING', 'DEF_CHAR_CODE_AT', 'DEF_STARTSWITH', 'DEF_ENDSWITH', 'DEF_LOWERCASE', 'DEF_UPPERCASE', 'DEF_CONCAT', 'DEF_SIGNED_32BITS', 'DEF_UNSIGNED_32BITS', 'DEF_USHR', 'DEF_GET_TYPE', 'DEF_IS_TYPE_NUM', 'DEF_IS_TYPE_BOOL', 'DEF_IS_TYPE_STR', 'DEF_IS_TYPE_LIST', 'DEF_IS_TYPE_DICT', 'DEF_IS_TYPE_NULL', 'DEF_CHR_QUOTE', 'DEF_CHR_SQUOTE', 'DEF_CHR_LF', 'DEF_CHR_CR', 'DEF_CHR_TAB']
 
 def is_valid_var(v):
     if len(v) < 1: return False
@@ -750,6 +750,8 @@ def generate_js_definition(def_type, def_name):
         return ('var '+f'{def_name}'+' = function(__1) {\n  return (__1 | 0);\n};\n')
     if def_type == "DEF_UNSIGNED_32BITS":
         return ('var '+f'{def_name}'+' = function(__1) {\n  __1 = (__1 | 0); return (__1 < 0 ? __1+0x100000000 : __1);\n};\n')
+    if def_type == "DEF_USHR":
+        return ('var '+f'{def_name}'+' = function(__1, __2) {\n  return (__1 >>> __2);\n};\n')
     if def_type == "DEF_GET_TYPE":
         return ('var '+f'{def_name}'+' = function(__1) {\n  return Object["prototype"]["toString"]["call"](__1);\n};\n')
     if def_type == "DEF_IS_TYPE_NUM":
@@ -1106,6 +1108,8 @@ def generate_py_definition(def_type, def_name):
         return ('def '+f'{def_name}'+'(__1): __1 = __1 & 0xffffffff; return (__1-0x100000000 if __1 > 0x7fffffff else __1)\n')
     if def_type == "DEF_UNSIGNED_32BITS":
         return ('def '+f'{def_name}'+'(__1): __1 = __1 & 0xffffffff; return (__1+0x100000000 if __1 < 0 else __1)\n')
+    if def_type == "DEF_USHR":
+        return ('def '+f'{def_name}'+'(__1, __2): return (__1 >> __2)\n')
     if def_type == "DEF_GET_TYPE":
         return ('def '+f'{def_name}'+'(__1): return type(__1)\n')
     if def_type == "DEF_IS_TYPE_NUM":
