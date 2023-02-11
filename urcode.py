@@ -1103,7 +1103,7 @@ def generate_py_definition(def_type, def_name):
     if def_type == "DEF_CONCAT":
         return ('def '+f'{def_name}'+'(__1, __2): return (__1+__2)\n')
     if def_type == "DEF_SIGNED_32BITS":
-        return ('def '+f'{def_name}'+'(__1): return (((__1 & 0x7fffffff)-0x80000000) if (__1 & 0x80000000) else (__1 & 0x7fffffff))\n')
+        return ('def '+f'{def_name}'+'(__1): __1 = __1 & 0xffffffff; return (__1-0x100000000 if __1 > 0x7fffffff else __1)\n')
     if def_type == "DEF_UNSIGNED_32BITS":
         return ('def '+f'{def_name}'+'(__1): __1 = __1 & 0xffffffff; return (__1+0x100000000 if __1 < 0 else __1)\n')
     if def_type == "DEF_GET_TYPE":
